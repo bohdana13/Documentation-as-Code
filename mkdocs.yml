@@ -1,0 +1,19 @@
+site_name: EventMaster Documentation
+site_description: Documentation as Code for EventMaster
+site_author: Dana
+
+nav:
+  - Home: README.md
+  - Architecture:
+      - SSD: architecture/SSD.md
+      - SDD: architecture/SDD.md
+      - ISD: architecture/ISD.md
+  - Quality:
+      - Test Strategy: quality/test-strategy.md
+      - Traceability Matrix: quality/traceability-matrix.md
+  - Developer:
+      - Onboarding: developer/onboarding.md
+  - Versioning: versioning.md
+
+theme:
+  name: mkdocs
