@@ -1,0 +1,85 @@
+openapi: 3.0.3
+info:
+  title: EventMaster API
+  description: API для системи організації конференцій та подій.
+  version: 1.0.0
+servers:
+  - url: https://api.eventmaster.local/v1
+    description: Локальне середовище розробки
+paths:
+  /api/events/{id}:
+    get:
+      summary: Отримати деталі події за ID
+      tags:
+        - Events
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Унікальний ідентифікатор події
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Подію знайдено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          description: Подію не знайдено
+  /api/events/{id}/book:
+    post:
+      summary: Забронювати місце на подію
+      tags:
+        - Bookings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Місце успішно заброньовано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '401':
+          description: Неавторизований доступ (необхідний JWT)
+        '409':
+          description: Конфлікт (немає вільних місць)
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        dateTime:
+          type: string
+          format: date-time
+        capacity:
+          type: integer
+        availableSeats:
+          type: integer
+    Booking:
+      type: object
+      properties:
+        id:
+          type: string
+        eventId:
+          type: string
+        status:
+          type: string
+          example: CONFIRMED

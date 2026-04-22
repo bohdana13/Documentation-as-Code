@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventMaster UI: BookingButton Story</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-50 p-8 flex flex-col items-center justify-center min-h-screen font-sans">
+
+    <div class="mb-10 text-center">
+        <h1 class="text-2xl font-bold text-gray-800">Components / BookingButton</h1>
+        <p class="text-gray-500">Інтерактивна візуалізація стану бронювання</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-20 mb-8 w-full max-w-md flex justify-center items-center">
+        <button id="mainButton" class="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all flex items-center justify-center gap-3">
+            <span id="btnText">Забронювати місце</span>
+            <div id="btnSpinner" class="spinner hidden"></div>
+        </button>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-6 w-full max-w-md">
+        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Controls</h3>
+        
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-gray-700">Стан (Status)</label>
+                <select id="statusSelect" class="border border-gray-300 rounded px-2 py-1 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="idle">Default</option>
+                    <option value="loading">Loading</option>
+                    <option value="success">Success</option>
+                    <option value="error">Error</option>
+                </select>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <label class="text-sm font-medium text-gray-700">Заблоковано (Disabled)</label>
+                <input type="checkbox" id="disabledCheck" class="w-4 h-4 text-blue-600">
+            </div>
+        </div>
+
+        <button id="resetBtn" class="mt-6 w-full text-xs text-blue-500 hover:underline uppercase font-bold">Скинути до початкового стану</button>
+    </div>
+
+    <script>
+        const btn = document.getElementById('mainButton');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const statusSelect = document.getElementById('statusSelect');
+        const disabledCheck = document.getElementById('disabledCheck');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function updateButton() {
+            const status = statusSelect.value;
+            const isDisabled = disabledCheck.checked;
+
+            // Скидання класів
+            btn.className = "px-8 py-3 font-semibold rounded-lg shadow-md transition-all flex items-center justify-center gap-3";
+            btnSpinner.classList.add('hidden');
+            btn.disabled = isDisabled;
+
+            if (status === 'idle') {
+                btn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                btnText.textContent = "Забронювати місце";
+            } else if (status === 'loading') {
+                btn.classList.add('bg-blue-400', 'text-white', 'cursor-not-allowed');
+                btnText.textContent = "Обробка...";
+                btnSpinner.classList.remove('hidden');
+                btn.disabled = true;
+            } else if (status === 'success') {
+                btn.classList.add('bg-green-500', 'text-white');
+                btnText.textContent = "Ви зареєстровані!";
+            } else if (status === 'error') {
+                btn.classList.add('bg-red-500', 'text-white');
+                btnText.textContent = "Помилка";
+            }
+
+            if (isDisabled && status !== 'loading') {
+                btn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed', 'shadow-none');
+                btn.classList.remove('hover:bg-blue-700', 'bg-blue-600');
+            }
+        }
+
+        // Клік на саму кнопку (імітація процесу)
+        btn.addEventListener('click', () => {
+            if (statusSelect.value === 'idle' && !btn.disabled) {
+                statusSelect.value = 'loading';
+                updateButton();
+                setTimeout(() => {
+                    statusSelect.value = 'success';
+                    updateButton();
+                }, 1500);
+            }
+        });
+
+        statusSelect.addEventListener('change', updateButton);
+        disabledCheck.addEventListener('change', updateButton);
+        resetBtn.addEventListener('click', () => {
+            statusSelect.value = 'idle';
+            disabledCheck.checked = false;
+            updateButton();
+        });
+    </script>
+</body>
+</html>

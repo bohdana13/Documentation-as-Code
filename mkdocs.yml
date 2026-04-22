@@ -8,11 +8,14 @@ nav:
       - SSD: architecture/SSD.md
       - SDD: architecture/SDD.md
       - ISD: architecture/ISD.md
+      - Storybook: architecture/ui-components.md
   - Quality:
       - Test Strategy: quality/test-strategy.md
       - Traceability Matrix: quality/traceability-matrix.md
+      - Definition of Done: definition-of-done.md
   - Developer:
       - Onboarding: developer/onboarding.md
+      - CI/CD Pipeline: ci-cd-docs.md
   - Versioning: versioning.md
 
 theme:
